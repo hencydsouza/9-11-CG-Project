@@ -9,10 +9,12 @@ void update(int value)
 {
 	a+=15.0;	///Vertical Height of X axis (i)
 	b-=10.0;	///Runway Movement
-	c+=15;	   ///take off angle on y axis
+	c=15;	   ///take off angle on y axis
 
 	if(b<=-80.0)
 		b=0.0;
+		
+		
 	glutPostRedisplay();
 	glutTimerFunc(200,update,0);//delay
 }
@@ -20,7 +22,6 @@ void update(int value)
 
 void Plane_Body(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
     runway();
 
 
@@ -255,6 +256,24 @@ void runway()
     glPopMatrix();
 }
 
+void background(){ 
+	glBegin(GL_POLYGON);
+		glColor3f(0.6980,0.8588,0.9137);
+		glVertex2f(0.0,0.0);
+		glVertex2f(1400.0,0.0);
+		glColor3f(0.0,0.4431,0.7098);
+		glVertex2f(1400.0,680.0);
+		glVertex2f(0.0,680.0);
+	glEnd();
+}
+
+
+void display(){
+	background();
+	Plane_Body();
+}
+
+
 
 
 void myinit()
@@ -274,7 +293,7 @@ int main(int argc, char* argv[])
     glutInitWindowSize(1400.0,680.0);
     glutInitWindowPosition(0,0);
     glutCreateWindow("Takeoff of an Airplane");
-    glutDisplayFunc(Plane_Body);
+    glutDisplayFunc(display);
     myinit();
     glutTimerFunc(100,update,0);
     glutMainLoop();

@@ -1,4 +1,4 @@
-#include<stdio.h>
+
 #include<windows.h>
 #include<GL/glut.h>
 #include<math.h>
@@ -10,25 +10,55 @@ static float c3 = 0.0; // Cloud 3
 static float c4 = 0.0; // Cloud 4
 float cloud_rad=5;
 
-GLfloat a=0,b=0,c=0,d=0,e=0,cl=0;
+float explo_val = 0.0;
 
+GLfloat a=1500,b=0,c=0,d=0,e=0,cloud=0,z=0,y=0,w=0,u=0;
 
-void building();
 void update(int value)
 {
-	a+=5.0;	///Vertical Height of X axis (i)
+	a-=10.0;	///Vertical Height of X axis (i)
 	b-=10.0;	///Runway Movement
 	c=150;	   ///take off angle on y axis
-	cl+=0.5;
+	cloud+=0.5;
 	c1-=0.2;
 	c2-=0.1;
 	c3+=0.1;
-	if(a>=360.0)
-		a=0.0;
+	z+=1.0;
+	y+=1.0;
+	w+=0.0001;
+	u-=10;
+	//if(a>=800.0){
+	//	explo_val = 0.0;
+	//	a=0.0;
+	//} 
+	//if(a<800)
+	//	a+=10.0;
+	if(z>=50){
+		z=0;
+		y=0;
+	}
+	if(a<=850){
+		a=1500.0;
+		explo_val = 0.0;
+	}
 		
+		
+	if(cloud>=160.0)
+		cloud=0.0;
 		
 	glutPostRedisplay();
 	glutTimerFunc(200,update,0);//delay
+}
+
+void explosion_timer(int value)
+{
+	//if(a<=400&&a>=600)
+	//if(a>=799.0)
+		//explo_val = 0.0;
+	if(explo_val<50.0)
+		explo_val+=0.7;
+	glutPostRedisplay();
+	glutTimerFunc(200,explosion_timer,0);//delay
 }
 
 void circle(float radiusX,float radiusY){
@@ -151,32 +181,30 @@ void clouds(){
     glPopMatrix();
 }
 
-void Plane_Body(void)
+void Plane_Body(int x)
 {
-    
-    
-
+	
     ///--------BODY OF THE PLANE----------
     glPushMatrix();
     glTranslated(a,c,0.0);
     glColor3f(0.750,0.750,0.750);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(15.0,30.0);
-        glVertex2f(0.0,55.0);
-        glVertex2f(135.0,55.0);
-        glVertex2f(135.0,30.0);
+        glVertex2f(x*15.0,30.0);
+        glVertex2f(x*0.0,55.0);
+        glVertex2f(x*135.0,55.0);
+        glVertex2f(x*135.0,30.0);
     glEnd();
     glPopMatrix();
     ///--------COCKPIT OF THE PLANE----------
     glPushMatrix();
     glTranslated(a,c,0.0);
-    glColor3f(0.0,0.0,0.0);
+    glColor3f(0.1,0.1,0.1);
     glBegin(GL_POLYGON);//upper triangle construction plane
-        glVertex2f(135.0,55.0);
-        glVertex2f(150.0,50.0);
-        glVertex2f(155.0,45.0);
-        glVertex2f(160.0,40.0);
-        glVertex2f(135.0,40.0);
+        glVertex2f(x*135.0,55.0);
+        glVertex2f(x*150.0,50.0);
+        glVertex2f(x*155.0,45.0);
+        glVertex2f(x*160.0,40.0);
+        glVertex2f(x*135.0,40.0);
     glEnd();
     glPopMatrix();
     ///--------COCKPIT OUTLINE DIVIDER----------
@@ -184,11 +212,11 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_LINE_LOOP);
-        glVertex2f(135.0,55.0);
-        glVertex2f(150.0,50.0);
-        glVertex2f(155.0,45.0);
-        glVertex2f(160.0,40.0);
-        glVertex2f(135.0,40.0);
+        glVertex2f(x*135.0,55.0);
+        glVertex2f(x*150.0,50.0);
+        glVertex2f(x*155.0,45.0);
+        glVertex2f(x*160.0,40.0);
+        glVertex2f(x*135.0,40.0);
     glEnd();
     glPopMatrix();
 
@@ -197,11 +225,11 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.750,0.750,0.750);
     glBegin(GL_POLYGON);//lower triangle
-        glVertex2f(135.0,40.0);
-        glVertex2f(160.0,40.0);
-        glVertex2f(160.0,37.0);
-        glVertex2f(145.0,30.0);
-        glVertex2f(135.0,30.0);
+        glVertex2f(x*135.0,40.0);
+        glVertex2f(x*160.0,40.0);
+        glVertex2f(x*160.0,37.0);
+        glVertex2f(x*145.0,30.0);
+        glVertex2f(x*135.0,30.0);
     glEnd();
     glPopMatrix();
 
@@ -210,10 +238,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(.33,.46,1.0);
     glBegin(GL_POLYGON);
-        glVertex2f(0.0,55.0);
-        glVertex2f(0.0,80.0);
-        glVertex2f(10.0,80.0);
-        glVertex2f(40.0,55.0);
+        glVertex2f(x*0.0,55.0);
+        glVertex2f(x*0.0,80.0);
+        glVertex2f(x*10.0,80.0);
+        glVertex2f(x*40.0,55.0);
     glEnd();
     glPopMatrix();
 
@@ -222,10 +250,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,1.0);
     glBegin(GL_POLYGON);
-        glVertex2f(65.0,55.0);
-        glVertex2f(50.0,70.0);
-        glVertex2f(75.0,70.0);
-        glVertex2f(90.0,55.0);
+        glVertex2f(x*65.0,55.0);
+        glVertex2f(x*50.0,70.0);
+        glVertex2f(x*75.0,70.0);
+        glVertex2f(x*90.0,55.0);
     glEnd();
     glPopMatrix();
     ///---------RIGHT WING-------------
@@ -233,10 +261,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,1.0);
     glBegin(GL_POLYGON);
-        glVertex2f(70.0,40.0);
-        glVertex2f(100.0,40.0);
-        glVertex2f(80.0,15.0);
-        glVertex2f(50.0,15.0);
+        glVertex2f(x*70.0,40.0);
+        glVertex2f(x*100.0,40.0);
+        glVertex2f(x*80.0,15.0);
+        glVertex2f(x*50.0,15.0);
     glEnd();
 
     glPopMatrix();
@@ -245,10 +273,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(20.0,45.0);
-        glVertex2f(20.0,50.0);
-        glVertex2f(30.0,50.0);
-        glVertex2f(30.0,45.0);
+        glVertex2f(x*20.0,45.0);
+        glVertex2f(x*20.0,50.0);
+        glVertex2f(x*30.0,50.0);
+        glVertex2f(x*30.0,45.0);
     glEnd();
     glPopMatrix();
     
@@ -257,10 +285,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(40.0,45.0);
-        glVertex2f(40.0,50.0);
-        glVertex2f(50.0,50.0);
-        glVertex2f(50.0,45.0);
+        glVertex2f(x*40.0,45.0);
+        glVertex2f(x*40.0,50.0);
+        glVertex2f(x*50.0,50.0);
+        glVertex2f(x*50.0,45.0);
     glEnd();
     glPopMatrix();
       	///-----------------WINDOW3---------
@@ -268,10 +296,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(60.0,45.0);
-        glVertex2f(60.0,50.0);
-        glVertex2f(70.0,50.0);
-        glVertex2f(70.0,45.0);
+        glVertex2f(x*60.0,45.0);
+        glVertex2f(x*60.0,50.0);
+        glVertex2f(x*70.0,50.0);
+        glVertex2f(x*70.0,45.0);
     glEnd();
     glPopMatrix();
       	///-----------------WINDOW4---------
@@ -279,10 +307,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(80.0,45.0);
-        glVertex2f(80.0,50.0);
-        glVertex2f(90.0,50.0);
-        glVertex2f(90.0,45.0);
+        glVertex2f(x*80.0,45.0);
+        glVertex2f(x*80.0,50.0);
+        glVertex2f(x*90.0,50.0);
+        glVertex2f(x*90.0,45.0);
     glEnd();
     glPopMatrix(); 
       	///-----------------WINDOW5---------
@@ -290,10 +318,10 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(100.0,45.0);
-        glVertex2f(100.0,50.0);
-        glVertex2f(110.0,50.0);
-        glVertex2f(110.0,45.0);
+        glVertex2f(x*100.0,45.0);
+        glVertex2f(x*100.0,50.0);
+        glVertex2f(x*110.0,50.0);
+        glVertex2f(x*110.0,45.0);
     glEnd();
     glPopMatrix();
       	///-----------------WINDOW6---------
@@ -301,15 +329,198 @@ void Plane_Body(void)
     glTranslated(a,c,0.0);
     glColor3f(0.0,0.0,0.0);
     glBegin(GL_POLYGON);//rectangular body
-        glVertex2f(120.0,45.0);
-        glVertex2f(120.0,50.0);
-        glVertex2f(130.0,50.0);
-        glVertex2f(130.0,45.0);
+        glVertex2f(x*120.0,45.0);
+        glVertex2f(x*120.0,50.0);
+        glVertex2f(x*130.0,50.0);
+        glVertex2f(x*130.0,45.0);
     glEnd();
     glPopMatrix();
     
     
 }
+void smoke(){
+	//main smoke
+	glPushMatrix();
+//	glTranslatef(310.0,150.0,0.0);
+//	glColor3f(0.0881,0.0881,0.0881);
+//	circle(60,80);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(240.0,110.0,0.0);
+	glColor3f(0.0881,0.0881,0.0881);
+	 glBegin(GL_POLYGON);//rectangular body
+        glVertex2f(10.0,45.0);
+        glVertex2f(10.0,180.0);
+        glVertex2f(70.0,230.0);
+        glVertex2f(130.0,180.0);
+        glVertex2f(130.0,45.0);
+    glEnd();
+    glPopMatrix();
+	//small smoke 0
+	glPushMatrix();
+	glTranslatef(290.0-z,200.0+y-50,0.0);
+	glColor3f(0.1001,0.1001,0.1001);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(300.0-(z*0.5),210.0+y-50,0.0);
+	glColor3f(0.1001,0.1001,0.1001);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(310.0,220.0+y-50,0.0);
+	glColor3f(0.1001,0.1001,0.1001);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(320.0+(z*0.5),210.0+y-50,0.0);
+	glColor3f(0.1001,0.1001,0.1001);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(330.0+z,200.0+y-50,0.0);
+	glColor3f(0.1001,0.1001,0.1001);
+	circle(30,40);
+	glPopMatrix();
+	//small smoke 1
+	glPushMatrix();
+	glTranslatef(290.0-z,200.0+y,0.0);
+	glColor3f(0.1221,0.1221,0.1221);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(300.0-(z*0.5),210.0+y,0.0);
+	glColor3f(0.1221,0.1221,0.1221);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(310.0,220.0+y,0.0);
+	glColor3f(0.1221,0.1221,0.1221);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(320.0+(z*0.5),210.0+y,0.0);
+	glColor3f(0.1221,0.1221,0.1221);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(330.0+z,200.0+y,0.0);
+	glColor3f(0.1221,0.1221,0.1221);
+	circle(30,40);
+	glPopMatrix();
+	//small smoke 2
+	glPushMatrix();
+	glTranslatef(290.0-z,250.0+y,0.0);
+	glColor3f(0.1551,0.1551,0.1551);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(300.0-(z*0.5),260.0+y,0.0);
+	glColor3f(0.1551,0.1551,0.1551);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(310.0,270.0+y,0.0);
+	glColor3f(0.1551,0.1551,0.1551);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(320.0+(z*0.5),260.0+y,0.0);
+	glColor3f(0.1551,0.1551,0.1551);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(330.0+z,250.0+y,0.0);
+	glColor3f(0.1551,0.1551,0.1551);
+	circle(30,40);
+	glPopMatrix();
+	//small smoke 3
+	glPushMatrix();
+	glTranslatef(290.0-z,300.0+y,0.0);
+	glColor3f(0.1881,0.1881,0.1881);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(300.0-(z*0.5),310.0+y,0.0);
+	glColor3f(0.1881,0.1881,0.1881);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(310.0,320.0+y,0.0);
+	glColor3f(0.1881,0.1881,0.1881);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(320.0+(z*0.5),310.0+y,0.0);
+	glColor3f(0.1881,0.1881,0.1881);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(330.0+z,300.0+y,0.0);
+	glColor3f(0.1881,0.1881,0.1881);
+	circle(30,40);
+	glPopMatrix();
+	//small smoke 4
+	glPushMatrix();
+	glTranslatef(290.0-z,300.0+y+50,0.0);
+	glColor3f(0.2,0.2,0.2);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(300.0-(z*0.5),310.0+y+50,0.0);
+	glColor3f(0.2,0.2,0.2);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(310.0,320.0+y+50,0.0);
+	glColor3f(0.2,0.2,0.2);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(320.0+(z*0.5),310.0+y+50,0.0);
+	glColor3f(0.2,0.2,0.2);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(330.0+z,300.0+y+50,0.0);
+	glColor3f(0.2,0.2,0.2);
+	circle(30,40);
+	glPopMatrix();
+	//small smoke 5
+	glPushMatrix();
+	glTranslatef(290.0-z,300.0+y+100,0.0);
+	glColor3f(0.2222,0.2222,0.2222);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(300.0-(z*0.5),310.0+y+100,0.0);
+	glColor3f(0.2222,0.2222,0.2222);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(310.0,320.0+y+100,0.0);
+	glColor3f(0.2222,0.2222,0.2222);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(320.0+(z*0.5),310.0+y+100,0.0);
+	glColor3f(0.2222,0.2222,0.2222);
+	circle(30,40);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(330.0+z,300.0+y+100,0.0);
+    glColor3f(0.2222,0.2222,0.2222);
+	circle(30,40);
+	glPopMatrix();
+	
+	
+	
+	
+	
+	
+	
+}
+
 void building()
 {
 	float i=0;
@@ -427,36 +638,72 @@ void background(){
 	glEnd();
 }
 
+void explosion(int size,float val){
+	
+	glPushMatrix();
+	
+	glTranslatef(280.0,150.0,0.0);
+	circle(size+(explo_val)*val,size*2+(explo_val)*val);
+	glPopMatrix();
+}
+
+void circle2(int r,int x,int y,float h)//r is radius, xy is center and h is a factor that makes it into an ellipse
+{
+    float theta;
+    glBegin(GL_POLYGON);
+    for(int i=0;i<360;i++)
+    {
+       theta=i*3.142/180;
+       glVertex2f(x+r*cos(theta)/h,y+r*sin(theta));
+     }
+     glEnd();
+
+}
+
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+	
+
 	background();
 	
 	//clouds
 	glPushMatrix();
 	glScalef(2.5,2.5,1.0);
-	glTranslatef(50.0+cl,100.0,0.0);
+	glTranslatef(50.0+cloud,100.0,0.0);
 	clouds();
 	glPopMatrix();
-	
+	//falling building
+	glPushMatrix();
+	glTranslatef(0,u,0);
 	//left building
 	glPushMatrix();
 	glTranslatef(-110.0,-60.0,0.0);
 	building();
 	glPopMatrix();
-	
-	Plane_Body();
-	
-	//right building
+
+		glPushMatrix();
+	smoke();
+	glPopMatrix();
+    //right building 
 	glPushMatrix();
 	building();
 	glPopMatrix();
 	
+	
+	glPushMatrix();
+		glTranslatef(110.0,58.0,0);
+		smoke();
+	glPopMatrix();
+	glPopMatrix();
+	
+	
+	
+
+
 	glutSwapBuffers();
 }
-
-
 
 
 void myinit()
@@ -481,6 +728,7 @@ int main(int argc, char* argv[])
     myinit();
     //glutTimerFunc(100,update,0);
     update(0);
+    explosion_timer(0);
     glutMainLoop();
     return 0;
 }

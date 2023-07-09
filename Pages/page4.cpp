@@ -1,8 +1,15 @@
 #include<stdio.h>
 #include<windows.h>
 #include<GL/glut.h>
+#include<math.h>
+#define PI 3.1416
+static float c1 = 0.0; // Cloud 1
+static float c2 = 0.0; // Cloud 2
+static float c3 = 0.0; // Cloud 3
+static float c4 = 0.0; // Cloud 4
+float cloud_rad=5;
 
-GLfloat a=0,b=0,c=0,d=0,e=0;
+GLfloat a=0,b=0,c=0,d=0,e=0,cloud=0;
 
 void runway();
 void update(int value)
@@ -10,6 +17,11 @@ void update(int value)
 	a+=15.0;	///Vertical Height of X axis (i)
 	b-=10.0;	///Runway Movement
 	c=150;	   ///take off angle on y axis
+	if(a>=900.0)
+		a=0.0;
+	cloud+=0.5;
+	if(cloud>=160.0)
+		cloud=0.0;
 
 	if(b<=-80.0)
 		b=0.0;
@@ -17,10 +29,130 @@ void update(int value)
 	glutTimerFunc(200,update,0);//delay
 }
 
+void circle(float radiusX,float radiusY){
+    int i;
+    float angle=0.0;
+    glBegin(GL_POLYGON);
+        for(i=0;i<100;i++){
+            angle= 2*PI*i/100;
+            glVertex2f(radiusX*cos(angle),radiusY*sin(angle));
+
+        }
+    glEnd();
+}
+
+void clouds(){
+	    //Cloud - 1
+    glPushMatrix();
+    glTranslatef(80+c1,80,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(80+c1,75,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(75+c1,75,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(85+c1,80,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    //Cloud - 2
+    glPushMatrix();
+    glTranslatef(40+c2,90,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(40+c2,85,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(35+c2,90,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(45+c2,84,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    //Cloud - 3
+    glPushMatrix();
+    glTranslatef(0+c3,70,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0+c3,65,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-5+c3,70,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(5+c3,70,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0+c3,73,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    //Cloud - 4
+    glPushMatrix();
+    glTranslatef(-40+c4,85,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-40+c4,80,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-45+c4,82,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-35+c4,84,0);
+    glColor3f(1,1,1);
+    circle(cloud_rad, cloud_rad);
+    glPopMatrix();
+}
+
+
 
 void Plane_Body(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
     
 
 
@@ -186,6 +318,31 @@ void Plane_Body(void)
     glutSwapBuffers();
 }
 
+void background(){ 
+	glBegin(GL_POLYGON);
+		glColor3f(0.6980,0.8588,0.9137);
+		glVertex2f(0.0,0.0);
+		glVertex2f(1400.0,0.0);
+		glColor3f(0.0,0.4431,0.7098);
+		glVertex2f(1400.0,680.0);
+		glVertex2f(0.0,680.0);
+	glEnd();
+}
+
+
+void display(){
+	background();
+	glPushMatrix();
+		glScalef(2.5,2.5,1.0);
+		glTranslatef(50.0+cloud,100.0,0.0);
+		clouds();
+	glPopMatrix();
+	glPushMatrix();
+	glScalef(0.5,0.5,0.5);
+		Plane_Body();
+	glPopMatrix();
+}
+
 
 
 
@@ -208,7 +365,7 @@ int main(int argc, char* argv[])
     glutInitWindowSize(1400.0,680.0);
     glutInitWindowPosition(0,0);
     glutCreateWindow("Takeoff of an Airplane");
-    glutDisplayFunc(Plane_Body);
+    glutDisplayFunc(display);
     myinit();
     glutTimerFunc(100,update,0);
     glutMainLoop();
